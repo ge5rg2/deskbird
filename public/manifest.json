@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "DeskBird",
   "version": "1.0",
-  "description": "내 책상 근처에 있는 새를 보여주는 확장 프로그램",
+  "description": "내 자리 근처에는 어떤 새들이 있을까?",
   "permissions": ["geolocation"],
   "action": {
     "default_popup": "index.html"

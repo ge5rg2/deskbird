@@ -1,51 +1,42 @@
-<template>
-  <div class="container">
-    <h1>{{ $t("header.title") }}</h1>
-    <button @click="getNearbyBirds">{{ $t("main.findBirds") }}</button>
-    <div v-if="birds.length">
-      <ul>
-        <li v-for="bird in birds" :key="bird.id">
-          {{ bird.name }} - {{ bird.location }}
-        </li>
-      </ul>
-    </div>
-    <p v-else>{{ $t("main.loading") }}</p>
-  </div>
-</template>
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+import BirdMap from "@/components/BirdMap.vue";
+// 다국어 설정
+const { locale } = useI18n();
 
-<script>
-export default {
-  data() {
-    return {
-      birds: [],
-    };
-  },
-  methods: {
-    getNearbyBirds() {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        console.log(`현위치: ${latitude}, ${longitude}`);
+// 새 목록 상태
+const birds = ref<{ id: number; name: string; location: string }[]>([]);
 
-        // TODO: eBird API 호출해서 새 정보 가져오기
-        this.birds = [
-          { id: 0, name: "현위치", location: `${latitude}, ${longitude}` },
-          { id: 1, name: "참새", location: "공원" },
-          { id: 2, name: "까치", location: "나무" },
-        ];
-      });
-    },
-  },
+// 현재 언어 계산
+const currentLang = computed(() => locale.value);
+
+// 언어 토글 함수
+const toggleLanguage = () => {
+  locale.value = locale.value === "en" ? "kr" : "en";
 };
 </script>
 
-<style>
+<template>
+  <div
+    class="max-w-sm mx-auto p-6 text-center bg-white shadow-md rounded-lg container"
+  >
+    <!-- 언어 변경 버튼 -->
+    <button
+      @click="toggleLanguage"
+      class="mb-4 px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 transition"
+    >
+      {{ currentLang === "en" ? "🇰🇷" : "🇺🇸" }}
+    </button>
+
+    <h1 class="text-2xl font-bold mb-4">{{ $t("header.title") }}</h1>
+
+    <BirdMap />
+  </div>
+</template>
+
+<style lang="css">
 .container {
-  width: 300px;
-  padding: 20px;
-  text-align: center;
-}
-button {
-  padding: 10px;
-  margin: 10px;
+  width: 600px;
 }
 </style>
