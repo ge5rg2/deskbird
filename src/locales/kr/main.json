@@ -1,0 +1,5 @@
+{
+  "findBirds": "새 찾기",
+  "loading": "근처 새 정보를 불러오는 중...",
+  "birdInfo": "{bird}는 {location}에서 발견되었습니다."
+}

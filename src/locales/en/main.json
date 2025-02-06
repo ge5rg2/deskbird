@@ -1,0 +1,5 @@
+{
+  "findBirds": "Find Birds",
+  "loading": "Loading nearby birds...",
+  "birdInfo": "{bird} is seen at {location}."
+}
