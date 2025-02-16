@@ -1,5 +1,12 @@
 {
   "findBirds": "새 찾기",
   "loading": "근처 새 정보를 불러오는 중...",
-  "birdInfo": "{bird}는 {location}에서 발견되었습니다."
+  "birdInfo": "{bird}는 {location}에서 발견되었습니다.",
+  "info": "정보",
+  "currentLocation": "현재 위치",
+  "foundPlace": "발견 장소",
+  "foundSpiec": "발견된 종",
+  "foundHowMany": "발견된 조류 수",
+  "spiec": "종",
+  "total": "총"
 }

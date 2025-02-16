@@ -14,6 +14,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [vue()],
+    css: {
+      postcss: "./postcss.config.js", // ✅ PostCSS 파일 직접 지정
+    },
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "src"), // @를 src 폴더로 설정

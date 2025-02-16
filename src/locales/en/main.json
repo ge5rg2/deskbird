@@ -1,5 +1,12 @@
 {
   "findBirds": "Find Birds",
   "loading": "Loading nearby birds...",
-  "birdInfo": "{bird} is seen at {location}."
+  "birdInfo": "{bird} is seen at {location}.",
+  "info": "Info",
+  "currentLocation": "Current Location",
+  "foundPlace": "Found Place",
+  "foundSpiec": "Found Species",
+  "foundHowMany": "Number of birds found",
+  "spiec": "species",
+  "total": "total"
 }
