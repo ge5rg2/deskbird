@@ -16,9 +16,7 @@ const toggleLanguage = () => {
 </script>
 
 <template>
-  <div
-    class="max-w-sm mx-auto p-6 text-center bg-white shadow-md rounded-lg container"
-  >
+  <div class="text-center bg-white shadow-md rounded-lg">
     <!-- 언어 변경 버튼 usei18n 테스트시에만 활성화-->
     <button
       v-show="false"
@@ -34,8 +32,4 @@ const toggleLanguage = () => {
   </div>
 </template>
 
-<style lang="css">
-.container {
-  width: 600px;
-}
-</style>
+<style lang="css"></style>
