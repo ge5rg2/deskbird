@@ -107,11 +107,15 @@ const getNearbyBirds = async () => {
             `
               <strong>${t("main.info")}</strong>
               <hr/ >
-              <div>${t("main.foundPlace")}: (${lat}, ${lng})</div>
-              <div>${t("main.foundSpiec")}: ${Object.keys(comName)} / ${t(
-              "main.total"
-            )} ${count} ${t("main.spiec")}</div>
-              <div>${t("main.foundHowMany")}: ${total_voulmn}</div>
+              <div><strong>${t(
+                "main.foundPlace"
+              )}</strong>: (${lat}, ${lng})</div>
+              <div><strong>${t("main.foundSpiec")}</strong>: ${Object.keys(
+              comName
+            )} / ${t("main.total")} ${count} ${t("main.spiec")}</div>
+              <div><strong>${t(
+                "main.foundHowMany"
+              )}</strong>: ${total_voulmn}</div>
               `
           );
         } else {
@@ -121,9 +125,15 @@ const getNearbyBirds = async () => {
             `
               <strong>${t("main.info")}</strong>
               <hr/ >
-              <div>${t("main.foundPlace")}: (${lat}, ${lng})</div>
-              <div>${t("main.foundSpiec")}: ${Object.keys(comName)}</div>
-              <div>${t("main.foundHowMany")}: ${Object.values(comName)}</div>
+              <div><strong>${t(
+                "main.foundPlace"
+              )}</strong>: (${lat}, ${lng})</div>
+              <div><strong>${t("main.foundSpiec")}</strong>: ${Object.keys(
+              comName
+            )}</div>
+              <div><strong>${t("main.foundHowMany")}</strong>: ${Object.values(
+              comName
+            )}</div>
               `
           );
         }

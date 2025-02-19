@@ -1,1 +1,5 @@
-{ "title": "Birds Near My Desk" }
+{
+  "title": "Birds Near My Desk",
+  "mapButton": "View on a map",
+  "listButton": "View as a list"
+}

@@ -12,11 +12,13 @@ export const useBirdStore = defineStore("birdStore", {
     initial_map: null as L.Map | null,
     isLoaded: false,
     isClicked: false,
+    openMap: false,
   }),
   getters: {
     getInitialMap: (state) => state.initial_map, // getInitialMap
     getIsLoaded: (state) => state.isLoaded, // getIsLoaded
     getIsClicked: (state) => state.isClicked, // getIsClicked
+    getOpenMap: (state) => state.openMap, // getOpenMap
   },
   actions: {
     setInitialMap(map: any) {
@@ -27,6 +29,9 @@ export const useBirdStore = defineStore("birdStore", {
     },
     setIsClicked(isClicked: boolean) {
       this.isClicked = isClicked;
+    },
+    setOpenMap() {
+      this.openMap = !this.openMap;
     },
   },
 });
