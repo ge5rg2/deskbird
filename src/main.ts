@@ -11,9 +11,10 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 /* import specific icons */
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 /* add icons to the library */
-library.add(faRotate);
+library.add(faRotate, faSpinner);
 
 const pinia = createPinia();
 const app = createApp(App);

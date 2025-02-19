@@ -41,6 +41,7 @@ const {
 const { t } = useI18n();
 const isClick = ref<boolean>(false);
 const isLoaded = ref<boolean>(false);
+const isDataLoaded = ref<boolean>(false);
 //const birdStore = useBirdStore();
 
 // ====================================
@@ -48,9 +49,10 @@ const isLoaded = ref<boolean>(false);
 
 const getNearbyBirds = async () => {
   try {
-    isLoaded.value = true;
     const position = await getCurrentPosition();
     isClick.value = true;
+    isLoaded.value = true; // ✅ 로딩 시작 (지도를 미리 로드)
+    isDataLoaded.value = false; // ✅ 데이터 로딩 시작
     if (!position) {
       alert(t("message.locationFail"));
       console.error(t("message.locationFail"));
@@ -138,6 +140,7 @@ const getNearbyBirds = async () => {
           );
         }
       });
+      isDataLoaded.value = true; // ✅ 데이터 로딩 완료
       return console.debug("🐤 success to get nearby birds");
     } else {
       alert(t("message.getNearbyFail"));
@@ -149,6 +152,7 @@ const getNearbyBirds = async () => {
     console.error(t("message.locationFail"), error);
     isLoaded.value = false;
     return;
+  } finally {
   }
 };
 
@@ -161,8 +165,14 @@ onMounted(async () => {});
 
 <template>
   <div class="flex flex-col items-center">
-    <div class="map-container">
-      <div v-show="isLoaded" id="map"></div>
+    <div class="map-container relative">
+      <div v-show="isLoaded" class="flex justify-center items-center" id="map">
+        <font-awesome-icon
+          v-show="!isDataLoaded"
+          class="spinner text-blue-500"
+          icon="fa-spinner"
+        />
+      </div>
       <div
         v-show="!isLoaded"
         class="flex items-center justify-center w-full h-full bg-gray-100"
@@ -187,5 +197,20 @@ onMounted(async () => {});
 #map {
   width: 100%; /* 부모 요소(.map-container)의 크기를 따라감 */
   height: 100%;
+}
+.spinner {
+  animation: spin 1s linear infinite;
+  position: relative;
+  color: blue;
+  width: 40px;
+  height: 40px;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
