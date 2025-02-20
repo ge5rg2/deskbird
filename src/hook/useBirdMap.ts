@@ -2,6 +2,9 @@ import "leaflet/dist/leaflet.css";
 import * as L from "leaflet";
 import { nextTick } from "vue";
 import { useBirdStore } from "@/stores/useBirdStore";
+import { getRecntBirdByLocation, getBirdsPicture } from "@/api/useBirdsApi";
+import type { BirdData } from "@/types/common.types.ts";
+import { useI18n } from "vue-i18n";
 
 const bird_icon_chrome = L.icon({
   iconUrl: "marker/bird-fly.png", // use chrome: chrome.runtime.getURL("marker/bird-fly.png"),
@@ -15,6 +18,16 @@ const bird_icon_chrome = L.icon({
 
 export const useBirdMap = () => {
   const birdStore = useBirdStore();
+  const { t } = useI18n();
+  /**
+   * TODO: Map 초기화 매서드 확인 필요
+   */
+  const setRefresh = () => {
+    birdStore.setIsClicked(false);
+    birdStore.setIsLoaded(false);
+    birdStore.setIsDataLoaded(false);
+    birdStore.setOpenMap(false);
+  };
 
   /**
    * 현재 위치 호출
@@ -35,7 +48,6 @@ export const useBirdMap = () => {
       attribution:
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map);
-
     birdStore.setInitialMap(map);
   };
 
@@ -44,7 +56,6 @@ export const useBirdMap = () => {
    */
   const updateMapView = async (lat: number, lng: number) => {
     // birdStore.initial_map.invalidateSize();
-
     if (!birdStore.initial_map) {
       initializeMap(lat, lng);
       return;
@@ -92,12 +103,143 @@ export const useBirdMap = () => {
       .bindPopup(popupText)
       .addTo(birdStore.initial_map);
   };
+  /**
+   * 책상 근처의 조류 정보 가져오기
+   * @returns mapData
+   */
+  const getNearbyBirds = async () => {
+    try {
+      const position = await getCurrentPosition();
+      birdStore.setIsClicked(true);
+      birdStore.setIsLoaded(true);
+      birdStore.setIsDataLoaded(false);
+      if (!position) {
+        alert(t("message.locationFail"));
+        console.error(t("message.locationFail"));
+        return;
+      }
+      const { latitude, longitude } = position.coords;
+
+      await nextTick();
+      updateMapView(latitude, longitude);
+
+      addMarker(
+        latitude,
+        longitude,
+        `
+      <strong>${t("main.currentLocation")}</strong>
+      <div>${latitude}, ${longitude}</div>
+      `
+      );
+
+      const bird_container: Record<
+        string,
+        { locName: string; species: Record<string, number> }
+      > = {};
+      const birdData = await getRecntBirdByLocation(latitude, longitude);
+
+      if (birdData) {
+        birdData.forEach((el: Partial<BirdData>) => {
+          if (el.lat && el.lng && el.comName && el.locName) {
+            const locationKey = `${el.lat}&${el.lng}`;
+
+            // 만약 해당 위치가 `bird_container`에 없으면 초기화
+            if (!bird_container[locationKey]) {
+              bird_container[locationKey] = {
+                locName: el.locName,
+                species: {},
+              };
+            }
+
+            // 새 개수 추가
+            if (!bird_container[locationKey].species[el.comName]) {
+              bird_container[locationKey].species[el.comName] = el.howMany || 1;
+            } else {
+              bird_container[locationKey].species[el.comName] +=
+                el.howMany || 1;
+            }
+          }
+        });
+
+        console.debug("🐦 bird_container:", bird_container);
+
+        // `bird_container`의 데이터를 기반으로 지도에 마커 및 서클 추가
+        Object.entries(bird_container).forEach(([location, data]) => {
+          const [lat, lng] = location.split("&").map(Number);
+          const { locName, species } = data;
+          const speciesNames = Object.keys(species);
+          const speciesCount = speciesNames.length;
+          const totalVolume = Object.values(species).reduce(
+            (acc, count) => acc + count,
+            0
+          );
+
+          if (speciesCount > 1) {
+            addCircle(
+              lat,
+              lng,
+              totalVolume,
+              `
+            <strong>${t("main.info")}</strong>
+            <hr/>
+            <div><strong>${t(
+              "main.foundPlace"
+            )}</strong>: (${lat}, ${lng}) - ${locName}</div>
+            <div><strong>${t("main.foundSpiec")}</strong>: ${speciesNames.join(
+                ", "
+              )} / ${t("main.total")} ${speciesCount} ${t("main.spiec")}</div>
+            <div><strong>${t(
+              "main.foundHowMany"
+            )}</strong>: ${totalVolume}</div>
+            `
+            );
+          } else {
+            addMarker(
+              lat,
+              lng,
+              `
+            <strong>${t("main.info")}</strong>
+            <hr/>
+            <div><strong>${t(
+              "main.foundPlace"
+            )}</strong>: (${lat}, ${lng}) - ${locName}</div>
+            <div><strong>${t("main.foundSpiec")}</strong>: ${
+                speciesNames[0]
+              }</div>
+            <div><strong>${t("main.foundHowMany")}</strong>: ${
+                species[speciesNames[0]]
+              }</div>
+            `
+            );
+          }
+        });
+
+        birdStore.setIsDataLoaded(true);
+        return console.debug("🐤 success to get nearby birds");
+      } else {
+        alert(t("message.getNearbyFail"));
+        console.error(t("message.getNearbyFail"));
+        birdStore.setIsClicked(false);
+        birdStore.setIsLoaded(false);
+        birdStore.setIsDataLoaded(false);
+        return;
+      }
+    } catch (error) {
+      alert(t("message.locationFail"));
+      console.error(t("message.locationFail"), error);
+      birdStore.setIsClicked(false);
+      birdStore.setIsLoaded(false);
+      birdStore.setIsDataLoaded(false);
+    }
+  };
 
   return {
+    getNearbyBirds,
     getCurrentPosition,
     initializeMap,
     updateMapView,
     addMarker,
     addCircle,
+    setRefresh,
   };
 };

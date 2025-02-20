@@ -6,11 +6,6 @@
 // ====================================
 // imports
 import "leaflet/dist/leaflet.css";
-import * as L from "leaflet";
-import { ref, computed, onMounted, nextTick } from "vue";
-import { getRecntBirdByLocation, getBirdsPicture } from "@/api/useBirdsApi";
-import type { BirdData } from "@/types/common.types.ts";
-import { useI18n } from "vue-i18n";
 import { useBirdStore } from "@/stores/useBirdStore";
 import { useBirdMap } from "@/hook/useBirdMap";
 // import bird-icon from "public/marker/bird-icon.png"
@@ -31,134 +26,14 @@ import { useBirdMap } from "@/hook/useBirdMap";
 
 // ====================================
 // variables
-const {
-  initializeMap,
-  addMarker,
-  updateMapView,
-  getCurrentPosition,
-  addCircle,
-} = useBirdMap();
-const { t } = useI18n();
-const isClick = ref<boolean>(false);
-const isLoaded = ref<boolean>(false);
-const isDataLoaded = ref<boolean>(false);
-//const birdStore = useBirdStore();
+const { getNearbyBirds } = useBirdMap();
+const birdStore = useBirdStore();
 
 // ====================================
 // functions - events
 
-const getNearbyBirds = async () => {
-  try {
-    const position = await getCurrentPosition();
-    isClick.value = true;
-    isLoaded.value = true; // ✅ 로딩 시작 (지도를 미리 로드)
-    isDataLoaded.value = false; // ✅ 데이터 로딩 시작
-    if (!position) {
-      alert(t("message.locationFail"));
-      console.error(t("message.locationFail"));
-      return;
-    }
-    const { latitude, longitude } = position.coords;
-    // 지도 중심을 현재 위치로 이동
-    // UI 업데이트 후 Leaflet 크기 재조정
-    await nextTick();
-    updateMapView(latitude, longitude);
-    // 현재 위치 마커 추가
-    addMarker(
-      latitude,
-      longitude,
-      `
-              <strong>${t("main.currentLocation")}</strong>
-              <div>${latitude}, ${longitude}</div>
-              `
-    );
-    // 근처 새 정보 가져오기
-    const bird_container: any[any] = [];
-    const birdData = await getRecntBirdByLocation(latitude, longitude);
-
-    if (birdData) {
-      birdData.forEach((el: Partial<BirdData>) => {
-        if (el.lat && el.lng && el.comName) {
-          const location = `${el.lat}&${el.lng}`;
-          if (!bird_container[location]) {
-            bird_container[location] = {};
-          }
-          if (!bird_container[location][el.comName]) {
-            bird_container[location][el.comName] = el.howMany;
-          }
-          bird_container[location][el.comName] =
-            bird_container[location][el.comName] + el.howMany;
-        }
-      });
-      //console.debug(bird_container);
-      // bird_container 의 지리별 조건문을 걸어주고, 개수가 1개일 시 마커, 이상일 경우 circle
-      Object.keys(bird_container).forEach((location: any) => {
-        const [lat, lng] = location.split("&");
-        const comName = bird_container[location];
-
-        const count = Object.keys(comName).length;
-        console.debug(Object.values(comName));
-        if (count > 1) {
-          const total_voulmn: any = Object.values(comName).reduce(
-            (acc: any, cur: any) => cur + acc
-          );
-          addCircle(
-            lat,
-            lng,
-            total_voulmn,
-            `
-              <strong>${t("main.info")}</strong>
-              <hr/ >
-              <div><strong>${t(
-                "main.foundPlace"
-              )}</strong>: (${lat}, ${lng})</div>
-              <div><strong>${t("main.foundSpiec")}</strong>: ${Object.keys(
-              comName
-            )} / ${t("main.total")} ${count} ${t("main.spiec")}</div>
-              <div><strong>${t(
-                "main.foundHowMany"
-              )}</strong>: ${total_voulmn}</div>
-              `
-          );
-        } else {
-          addMarker(
-            lat,
-            lng,
-            `
-              <strong>${t("main.info")}</strong>
-              <hr/ >
-              <div><strong>${t(
-                "main.foundPlace"
-              )}</strong>: (${lat}, ${lng})</div>
-              <div><strong>${t("main.foundSpiec")}</strong>: ${Object.keys(
-              comName
-            )}</div>
-              <div><strong>${t("main.foundHowMany")}</strong>: ${Object.values(
-              comName
-            )}</div>
-              `
-          );
-        }
-      });
-      isDataLoaded.value = true; // ✅ 데이터 로딩 완료
-      return console.debug("🐤 success to get nearby birds");
-    } else {
-      alert(t("message.getNearbyFail"));
-      console.error(t("message.getNearbyFail"));
-      return (isLoaded.value = false);
-    }
-  } catch (error) {
-    alert(t("message.locationFail"));
-    console.error(t("message.locationFail"), error);
-    isLoaded.value = false;
-    return;
-  } finally {
-  }
-};
-
 // ====================================
 // lifecycles
-onMounted(async () => {});
 
 // ====================================
 </script>
@@ -166,19 +41,20 @@ onMounted(async () => {});
 <template>
   <div class="flex flex-col items-center">
     <div class="map-container relative">
-      <div v-show="isLoaded" class="flex justify-center items-center" id="map">
-        <font-awesome-icon
-          v-show="!isDataLoaded"
-          class="spinner text-blue-500"
-          icon="fa-spinner"
-        />
-      </div>
       <div
-        v-show="!isLoaded"
+        v-show="!birdStore.getIsDataLoaded && birdStore.getIsClicked"
+        class="loading-overlay"
+      >
+        <font-awesome-icon class="spinner text-blue-500" icon="fa-spinner" />
+        <p>{{ $t("main.loading") }}</p>
+      </div>
+      <div v-show="birdStore.getIsLoaded" id="map"></div>
+      <div
+        v-show="!birdStore.getIsLoaded"
         class="flex items-center justify-center w-full h-full bg-gray-100"
       >
         <button
-          v-show="!isClick"
+          v-show="!birdStore.getIsClicked"
           @click="getNearbyBirds"
           class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
         >
@@ -193,6 +69,23 @@ onMounted(async () => {});
 .map-container {
   width: 500px; /* 너비를 높이와 동일시 지도 상 줌이 안됨 */
   height: 400px;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 999;
 }
 #map {
   width: 100%; /* 부모 요소(.map-container)의 크기를 따라감 */
