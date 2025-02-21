@@ -20,13 +20,15 @@ export const useBirdMap = () => {
   const birdStore = useBirdStore();
   const { t } = useI18n();
   /**
-   * TODO: Map 초기화 매서드 확인 필요
+   * Map 초기화 매서드
    */
   const setRefresh = () => {
     birdStore.setIsClicked(false);
     birdStore.setIsLoaded(false);
     birdStore.setIsDataLoaded(false);
-    birdStore.setOpenMap(false);
+    if (!birdStore.getOpenMap) {
+      birdStore.setOpenMap();
+    }
   };
 
   /**
@@ -105,14 +107,15 @@ export const useBirdMap = () => {
   };
   /**
    * 책상 근처의 조류 정보 가져오기
+   * TODO: obsDt 추가
    * @returns mapData
    */
   const getNearbyBirds = async () => {
     try {
-      const position = await getCurrentPosition();
       birdStore.setIsClicked(true);
       birdStore.setIsLoaded(true);
       birdStore.setIsDataLoaded(false);
+      const position = await getCurrentPosition();
       if (!position) {
         alert(t("message.locationFail"));
         console.error(t("message.locationFail"));
@@ -132,31 +135,32 @@ export const useBirdMap = () => {
       `
       );
 
-      const bird_container: Record<
-        string,
-        { locName: string; species: Record<string, number> }
-      > = {};
+      //birdStore.setBirdContainer({});
+      const bird_container = birdStore.getBirdContainer;
       const birdData = await getRecntBirdByLocation(latitude, longitude);
 
       if (birdData) {
+        //console.debug("🐦 birdData:", birdData);
         birdData.forEach((el: Partial<BirdData>) => {
-          if (el.lat && el.lng && el.comName && el.locName) {
+          if (el.lat && el.lng && el.comName && el.locName && el.obsDt) {
             const locationKey = `${el.lat}&${el.lng}`;
 
             // 만약 해당 위치가 `bird_container`에 없으면 초기화
             if (!bird_container[locationKey]) {
               bird_container[locationKey] = {
                 locName: el.locName,
+                obsDt: el.obsDt,
                 species: {},
               };
-            }
-
-            // 새 개수 추가
-            if (!bird_container[locationKey].species[el.comName]) {
-              bird_container[locationKey].species[el.comName] = el.howMany || 1;
             } else {
-              bird_container[locationKey].species[el.comName] +=
-                el.howMany || 1;
+              // 새 개수 추가
+              if (!bird_container[locationKey].species[el.comName]) {
+                bird_container[locationKey].species[el.comName] =
+                  el.howMany || 1;
+              } else {
+                bird_container[locationKey].species[el.comName] +=
+                  el.howMany || 1;
+              }
             }
           }
         });
@@ -164,13 +168,13 @@ export const useBirdMap = () => {
         console.debug("🐦 bird_container:", bird_container);
 
         // `bird_container`의 데이터를 기반으로 지도에 마커 및 서클 추가
-        Object.entries(bird_container).forEach(([location, data]) => {
+        Object.entries(bird_container).forEach(([location, data]: any) => {
           const [lat, lng] = location.split("&").map(Number);
-          const { locName, species } = data;
+          const { locName, species, obsDt } = data;
           const speciesNames = Object.keys(species);
           const speciesCount = speciesNames.length;
-          const totalVolume = Object.values(species).reduce(
-            (acc, count) => acc + count,
+          const totalVolume: any = Object.values(species).reduce(
+            (acc: any, count: any) => acc + count,
             0
           );
 
@@ -185,6 +189,7 @@ export const useBirdMap = () => {
             <div><strong>${t(
               "main.foundPlace"
             )}</strong>: (${lat}, ${lng}) - ${locName}</div>
+            <div><strong>${t("main.foundDate")}</strong>: ${obsDt}</div>
             <div><strong>${t("main.foundSpiec")}</strong>: ${speciesNames.join(
                 ", "
               )} / ${t("main.total")} ${speciesCount} ${t("main.spiec")}</div>
@@ -203,6 +208,7 @@ export const useBirdMap = () => {
             <div><strong>${t(
               "main.foundPlace"
             )}</strong>: (${lat}, ${lng}) - ${locName}</div>
+            <div><strong>${t("main.foundDate")}</strong>: ${obsDt}</div>
             <div><strong>${t("main.foundSpiec")}</strong>: ${
                 speciesNames[0]
               }</div>
@@ -213,7 +219,7 @@ export const useBirdMap = () => {
             );
           }
         });
-
+        birdStore.setBirdContainer(bird_container);
         birdStore.setIsDataLoaded(true);
         return console.debug("🐤 success to get nearby birds");
       } else {

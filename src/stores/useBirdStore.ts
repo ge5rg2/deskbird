@@ -10,6 +10,10 @@ import { defineStore } from "pinia";
 export const useBirdStore = defineStore("birdStore", {
   state: () => ({
     initial_map: null as L.Map | null,
+    bird_container: {} as Record<
+      string,
+      { locName: string; obsDt: string; species: Record<string, number> }
+    >,
     isLoaded: false,
     isClicked: false,
     isDataLoaded: false,
@@ -17,14 +21,18 @@ export const useBirdStore = defineStore("birdStore", {
   }),
   getters: {
     getInitialMap: (state) => state.initial_map, // getInitialMap
+    getBirdContainer: (state) => state.bird_container, // getBirdContainer
     getIsLoaded: (state) => state.isLoaded, // getIsLoaded
     getIsClicked: (state) => state.isClicked, // getIsClicked
     getIsDataLoaded: (state) => state.isDataLoaded, // getIsDataLoaded
-    getOpenMap: (state) => state.openMap,
+    getOpenMap: (state) => state.openMap, // getOpenMap
   },
   actions: {
     setInitialMap(map: any) {
       this.initial_map = map;
+    },
+    setBirdContainer(bird_container: any) {
+      this.bird_container = bird_container;
     },
     setIsLoaded(isLoaded: boolean) {
       this.isLoaded = isLoaded;
@@ -35,8 +43,8 @@ export const useBirdStore = defineStore("birdStore", {
     setIsDataLoaded(isDataLoaded: boolean) {
       this.isDataLoaded = isDataLoaded;
     },
-    setOpenMap(openMap: boolean) {
-      this.openMap = openMap;
+    setOpenMap() {
+      this.openMap = !this.openMap;
     },
   },
 });

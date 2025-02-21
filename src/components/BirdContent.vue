@@ -23,17 +23,28 @@ const birdStore = useBirdStore();
 // ====================================
 </script>
 
-<template></template>
+<template>
+  <div class="bird-list">
+    <ul>
+      <li
+        v-for="(data, location) in birdStore.getBirdContainer"
+        :key="location"
+        class="text-black border border-gray-200 p-4"
+      >
+        <div class="location">
+          <strong>위치:</strong> {{ data.locName }} ({{ location }})
+        </div>
+        <div class="observation-date">
+          <strong>관찰 날짜:</strong> {{ data.obsDt }}
+        </div>
+        <ul class="species-list">
+          <li v-for="(count, species) in data.species" :key="species">
+            🐦 <strong>{{ species }}</strong> - {{ count }} 마리
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</template>
 
 <style lang="css"></style>
-
-<img alt="ML203075051" src="https://cdn.download.ams.birds.cornell.edu/api/v1/asset/203075051/1200/320" srcset="
-													https://cdn.download.ams.birds.cornell.edu/api/v1/asset/203075051/1200/160   160w,
-													https://cdn.download.ams.birds.cornell.edu/api/v1/asset/203075051/1200/320   320w,
-													https://cdn.download.ams.birds.cornell.edu/api/v1/asset/203075051/1200/480   480w,
-													https://cdn.download.ams.birds.cornell.edu/api/v1/asset/203075051/1200/640   640w,
-													https://cdn.download.ams.birds.cornell.edu/api/v1/asset/203075051/1200/900   900w,
-													https://cdn.download.ams.birds.cornell.edu/api/v1/asset/203075051/1200/1200 1200w,
-													https://cdn.download.ams.birds.cornell.edu/api/v1/asset/203075051/1200/1800 1800w,
-													https://cdn.download.ams.birds.cornell.edu/api/v1/asset/203075051/1200/2400 2400w
-												" sizes="(max-width: 767px) 80vw, 80vw" data-image-loaded="" class="Species-media-image">

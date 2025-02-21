@@ -4,9 +4,13 @@ import { useI18n } from "vue-i18n";
 import BirdMap from "@/components/BirdMap.vue";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
+import BirdContent from "./components/BirdContent.vue";
+
+import { useBirdStore } from "./stores/useBirdStore";
 
 const { locale } = useI18n();
 const currentLang = computed(() => locale.value);
+const birdStore = useBirdStore();
 
 const toggleLanguage = () => {
   locale.value = locale.value === "en" ? "kr" : "en";
@@ -26,8 +30,8 @@ const toggleLanguage = () => {
       </button>
 
       <Header />
-
-      <BirdMap />
+      <BirdMap v-show="birdStore.getOpenMap" />
+      <BirdContent v-show="!birdStore.getOpenMap" />
     </div>
     <Footer />
   </div>

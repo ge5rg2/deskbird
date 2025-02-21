@@ -17,7 +17,7 @@ import { useBirdStore } from "@/stores/useBirdStore";
 // ====================================
 // variables
 const birdStore = useBirdStore();
-const { getNearbyBirds, setRefresh } = useBirdMap();
+const { setRefresh } = useBirdMap();
 // ====================================
 // functions - events
 const toggleMap = async () => {
@@ -25,6 +25,7 @@ const toggleMap = async () => {
 };
 
 const handleRefresh = async () => {
+  // console.debug(birdStore.getBirdContainer);
   return await setRefresh();
 };
 
@@ -41,7 +42,7 @@ const handleRefresh = async () => {
         :class="birdStore.getOpenMap ? 'bg-black-200' : 'bg-black-200'"
       >
         {{
-          birdStore.getOpenMap
+          !birdStore.getOpenMap
             ? $t("header.mapButton")
             : $t("header.listButton")
         }}
