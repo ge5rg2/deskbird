@@ -39,7 +39,8 @@ const handleRefresh = async () => {
       <button
         @click="toggleMap"
         class="px-4 py-2 rounded toggle-button"
-        :class="birdStore.getOpenMap ? 'bg-black-200' : 'bg-black-200'"
+        :class="birdStore.getIsDataLoaded ? 'bg-black-200' : 'bg-gray-200'"
+        :disabled="!birdStore.getIsDataLoaded"
       >
         {{
           !birdStore.getOpenMap

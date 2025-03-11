@@ -108,6 +108,7 @@ export const useBirdMap = () => {
   /**
    * 책상 근처의 조류 정보 가져오기
    * TODO: obsDt 추가
+   * TODO: undefined 처리
    * @returns mapData
    */
   const getNearbyBirds = async () => {
@@ -150,10 +151,9 @@ export const useBirdMap = () => {
               bird_container[locationKey] = {
                 locName: el.locName,
                 obsDt: el.obsDt,
-                species: {},
+                species: { [el.comName]: el.howMany || 1 },
               };
             } else {
-              // 새 개수 추가
               if (!bird_container[locationKey].species[el.comName]) {
                 bird_container[locationKey].species[el.comName] =
                   el.howMany || 1;
@@ -191,8 +191,8 @@ export const useBirdMap = () => {
             )}</strong>: (${lat}, ${lng}) - ${locName}</div>
             <div><strong>${t("main.foundDate")}</strong>: ${obsDt}</div>
             <div><strong>${t("main.foundSpiec")}</strong>: ${speciesNames.join(
-                ", "
-              )} / ${t("main.total")} ${speciesCount} ${t("main.spiec")}</div>
+              ", "
+            )} / ${t("main.total")} ${speciesCount} ${t("main.spiec")}</div>
             <div><strong>${t(
               "main.foundHowMany"
             )}</strong>: ${totalVolume}</div>
@@ -210,11 +210,11 @@ export const useBirdMap = () => {
             )}</strong>: (${lat}, ${lng}) - ${locName}</div>
             <div><strong>${t("main.foundDate")}</strong>: ${obsDt}</div>
             <div><strong>${t("main.foundSpiec")}</strong>: ${
-                speciesNames[0]
-              }</div>
+              speciesNames[0]
+            }</div>
             <div><strong>${t("main.foundHowMany")}</strong>: ${
-                species[speciesNames[0]]
-              }</div>
+              species[speciesNames[0]]
+            }</div>
             `
             );
           }

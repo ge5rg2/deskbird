@@ -64,4 +64,21 @@ export const getBirdsPicture = async (name: string) => {
         "locationPrivate": false,
         "subId": "S212537021"
     },
+bird-container
+    {
+    "37.3114241&126.9448905": {
+        "locName": "278-2 초평동, 의왕시, 경기도, KR (37.311, 126.945)",
+        "obsDt": "2025-03-11 17:55",
+        "species": {}
+    },
+    "37.3114241&126.9448905": {
+      "locName": "대전--갑천-불무교(Daejeon--Gapcheon(stream)-Bulmugyo(bridge))",
+      "obsDt": "2025-03-11 17:00",
+      "species": {
+          "Meadow Pipit": 7,
+          "Water Pipit": 21,
+          "Eastern Yellow Wagtail (Eastern)": 1
+      }
+  }
+}
  */
