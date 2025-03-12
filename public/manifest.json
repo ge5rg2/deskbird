@@ -8,11 +8,11 @@
   "action": {
     "default_popup": "index.html",
     "default_icon": {
-      "128": "icons/d_icon.png"
+      "128": "icons/p_icon.png"
     },
     "default_locale": "en"
   },
   "icons": {
-    "128": "icons/d_icon.png"
+    "128": "icons/p_icon.png"
   }
 }
