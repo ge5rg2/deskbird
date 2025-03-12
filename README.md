@@ -1,10 +1,20 @@
-# Vue 3 + TypeScript + Vite
+# Privacy Policy for DeskBird
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Effective Date: 2025-03-12
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+DeskBird is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and share user data, particularly regarding location information, when using the DeskBird extension.
 
-# icon
-
-ref: https://icons8.com/icons/set/bird
-ref: https://hotpot.ai/icon-resizer
+1. Data Collection
+   DeskBird collects your location data only when you actively request nearby bird information.
+   No other personal data is collected.
+2. Use of Data
+   The collected location data is used solely to fetch nearby bird observation records from the eBird API.
+   Your location is not stored or used for any other purpose.
+3. Data Sharing
+   DeskBird does not share, sell, or distribute your location data to third parties.
+   Your location is sent directly to the eBird API to retrieve relevant bird data but is not stored.
+4. User Consent
+   By using DeskBird, you agree to share your location when searching for nearby birds.
+   You can deny location access at any time through your browser settings.
+5. Contact Information
+   If you have any questions regarding this Privacy Policy, please contact us at [your email or support contact].
