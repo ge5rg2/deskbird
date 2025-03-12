@@ -2,7 +2,7 @@ import { createI18n } from "vue-i18n";
 
 // JSON을 동적으로 가져오는 함수
 function loadLocaleMessages() {
-  const locales: any = import.meta.glob("./locales/**/**/*.json", {
+  const locales: any = import.meta.glob("./_locales/**/**/*.json", {
     eager: true,
   });
   const messages: Record<string, any> = {};
