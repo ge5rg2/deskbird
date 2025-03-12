@@ -105,6 +105,7 @@ export const useBirdMap = () => {
       .bindPopup(popupText)
       .addTo(birdStore.initial_map);
   };
+
   /**
    * 책상 근처의 조류 정보 가져오기
    * TODO: obsDt 추가

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ====================================
-//    Page
+//    Bird Card
 // ====================================
 
 // ====================================
@@ -17,12 +17,19 @@
 
 // ====================================
 // functions - events
+const props = defineProps<{
+  img: string;
+}>();
 
 // ====================================
 </script>
 
 <template>
-  <div class="w-full bg-black opacity-50 p-1"></div>
+  <div class="w-full h-full">
+    <div>
+      <img :src="props.img" alt="logo" />
+    </div>
+  </div>
 </template>
 
 <style lang="css"></style>

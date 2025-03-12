@@ -1,4 +1,5 @@
 {
   "locationFail": "Failed to get location birds information.",
-  "getNearbyFail": "Failed to get nearby new birds information."
+  "getNearbyFail": "Failed to get nearby new birds information.",
+  "tbd": "To be determined"
 }

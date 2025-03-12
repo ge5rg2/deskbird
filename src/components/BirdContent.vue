@@ -7,36 +7,53 @@
 // imports
 import { ref, watch } from "vue";
 import { useBirdMap } from "@/hook/useBirdMap";
+import { useBirdImg } from "@/hook/useBirdImg";
+import { useI18n } from "vue-i18n";
 // ====================================
 // components
+import BirdCard from "@/components/BirdCard.vue";
 
 // ====================================
 // stores
 import { useBirdStore } from "@/stores/useBirdStore";
 // ====================================
 // variables
+const { t } = useI18n();
 const birdStore = useBirdStore();
-const { getNearbyBirds } = useBirdMap();
-
+const { getBirdImg } = useBirdImg();
+const openCard = ref(false);
+const birdImg = ref<string>("");
 // ====================================
 // functions - events
 
-const getBirds = () => {
-  alert("getBirds");
+const getBirds = async (species: string) => {
+  alert(t("message.tbd"));
+  /* const re = await getBirdImg(species);
+  console.log(re);
+  birdImg.value = re;
+  openCard.value = true; */
 };
 
-watch(
+const closeCard = () => {
+  openCard.value = false;
+};
+
+/* watch(
   () => birdStore.getIsDataLoaded,
   () => {
     console.log("birdStore.getBirdContainer", birdStore.getBirdContainer);
   }
-);
+); */
 // ====================================
 </script>
 
 <template>
   <div class="bird-list">
-    <ul v-if="birdStore.getIsDataLoaded" class="list-none p-0">
+    <div v-if="openCard">
+      <button @click="closeCard">BACK</button>
+      <BirdCard :img="birdImg" />
+    </div>
+    <ul v-if="birdStore.getIsDataLoaded && !openCard" class="list-none p-0">
       <li
         v-for="(data, location) in birdStore.getBirdContainer"
         :key="location"
@@ -54,9 +71,9 @@ watch(
         </div>
         <ul class="species-list">
           <li
-            @click="getBirds"
             class="bird-name"
             v-for="(count, species) in data.species"
+            @click="getBirds(String(species))"
             :key="species"
           >
             🐦 <strong>{{ species }}</strong
