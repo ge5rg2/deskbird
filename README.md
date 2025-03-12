@@ -6,4 +6,5 @@ Learn more about the recommended Project Setup and IDE Support in the [Vue Docs 
 
 # icon
 
-https://www.iconarchive.com/show/papirus-apps-icons-by-papirus-team/pingus-icon-icon.html
+ref: https://icons8.com/icons/set/bird
+ref: https://hotpot.ai/icon-resizer
