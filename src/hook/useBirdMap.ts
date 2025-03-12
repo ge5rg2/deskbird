@@ -51,22 +51,25 @@ export const useBirdMap = () => {
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map);
     birdStore.setInitialMap(map);
+    return map;
   };
 
   /**
    * 지도 뷰 업데이트
    */
   const updateMapView = async (lat: number, lng: number) => {
-    // birdStore.initial_map.invalidateSize();
     if (!birdStore.initial_map) {
       initializeMap(lat, lng);
-      return;
-    } else {
-      await nextTick();
-      birdStore.initial_map.setView([lat, lng], 14);
+      await nextTick(); // 지도 렌더링을 기다린 후 실행
     }
 
-    //birdStore.initial_map.setView([lat, lng], 14);
+    if (birdStore.initial_map) {
+      birdStore.initial_map.setView([lat, lng], 14);
+    } else {
+      console.error(
+        "🚨 Leaflet Map initialization failed: 'null' status after initialization"
+      );
+    }
   };
 
   /**
