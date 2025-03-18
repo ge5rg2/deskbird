@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
+    base: "./", // 배포 경로
     plugins: [vue()],
     css: {
       postcss: "./postcss.config.js", // ✅ PostCSS 파일 직접 지정
