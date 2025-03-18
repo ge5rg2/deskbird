@@ -1,7 +1,7 @@
 # Privacy Policy for DeskBird
 
 Effective Date: 2025-03-12
-
+URL: [DeskBird](https://chromewebstore.google.com/detail/dledgclaiopfaljmecahdnjnleknhihc?utm_source=item-share-cb "DeskBird"){:target="\_blank"}
 DeskBird is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and share user data, particularly regarding location information, when using the DeskBird extension.
 
 1. Data Collection
