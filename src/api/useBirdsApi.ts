@@ -21,8 +21,8 @@ export const getRecntBirdByLocation = async (lat: number, lng: number) => {
       }
     );
     return response.data;
-  } catch (error: any) {
-    return error;
+  } catch (error) {
+    return (error as Error).message;
   }
 };
 // TODO: sciName 으로 사용하는 것이 적절할 듯
@@ -43,8 +43,8 @@ export const getBirdsPicture = async (name: string) => {
       }
     );
     return response.data;
-  } catch (error: any) {
-    return error;
+  } catch (error) {
+    return (error as Error).message;
   }
 };
 
