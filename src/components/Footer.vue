@@ -34,6 +34,12 @@
           >Geroge</a
         >
       </p>
+      <p>
+        Data provided by
+        <a href="https://ebird.org/home" target="_blank" class="text-blue-300"
+          >eBird</a
+        >
+      </p>
     </div>
   </div>
 </template>

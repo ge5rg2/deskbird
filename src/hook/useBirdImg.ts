@@ -13,8 +13,8 @@ export const useBirdImg = () => {
       const response = await getBirdsPicture(speciesCode);
       //console.log(response.results[0].urls.small);
       return response.results[0].urls.small;
-    } catch (error: any) {
-      return error;
+    } catch (error) {
+      return (error as Error).message;
     }
   };
   return { getBirdImg };

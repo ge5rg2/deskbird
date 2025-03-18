@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "DeskBird",
-  "version": "1.0",
-  "version_name": "1.0 beta",
+  "version": "1.0.1",
+  "version_name": "1.0.1 beta",
   "description": "A chrome extension that shows nearby birds information.",
   "permissions": ["geolocation"],
   "action": {
